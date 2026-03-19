@@ -1,0 +1,37 @@
+-- Medidas (DAX) para o dataset healthcare_daily.csv
+-- Tabela esperada: 'healthcare_daily' (nome pode variar conforme o Power BI)
+
+Total Visits =
+SUM ( 'healthcare_daily'[visits] )
+
+Admissions =
+SUM ( 'healthcare_daily'[admissions] )
+
+Discharges =
+SUM ( 'healthcare_daily'[discharges] )
+
+Avg Wait (min) =
+AVERAGE ( 'healthcare_daily'[avg_wait_minutes] )
+
+Avg Length of Stay (days) =
+AVERAGE ( 'healthcare_daily'[avg_length_stay_days] )
+
+Readmissions =
+SUM ( 'healthcare_daily'[readmissions] )
+
+Readmission Rate =
+DIVIDE ( [Readmissions], [Admissions], 0 )
+
+-- Crescimento MoM (mês sobre mês) em visitas
+Visits MoM % =
+VAR CurrentMonth =
+    MAX ( 'healthcare_daily'[date] )
+VAR PrevMonth =
+    EDATE ( CurrentMonth, -1 )
+VAR CurrentMonthVisits =
+    CALCULATE ( [Total Visits], YEAR('healthcare_daily'[date])=YEAR(CurrentMonth), MONTH('healthcare_daily'[date])=MONTH(CurrentMonth) )
+VAR PrevMonthVisits =
+    CALCULATE ( [Total Visits], YEAR('healthcare_daily'[date])=YEAR(PrevMonth), MONTH('healthcare_daily'[date])=MONTH(PrevMonth) )
+RETURN
+    IF ( PrevMonthVisits = 0, BLANK(), DIVIDE(CurrentMonthVisits - PrevMonthVisits, PrevMonthVisits) )
+
