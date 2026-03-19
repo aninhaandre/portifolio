@@ -1,0 +1,6 @@
+apache-airflow==2.8.1
+apache-airflow-providers-common-sql==1.10.0
+
+# Demo scripts (gera e agrega dados)
+python-dateutil==2.9.0.post0
+
